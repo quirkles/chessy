@@ -1,14 +1,14 @@
 <script lang="ts">
     import Square from "./Square.svelte";
-    import {Board} from "../game/Board";
     import Piece from "./Piece.svelte";
+    import type {Board} from "../store/Board";
 
     export let board: Board
 </script>
 <div class="board">
     {#if board && board.squares}
         {#each board.squares as rowOfSquares, rank}
-            <div class="row">
+            <div class="row rank-{rank}">
                 {#each board.squares[rank] as square}
                     <Square square={square}/>
                 {/each}

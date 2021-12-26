@@ -1,8 +1,8 @@
 <script lang="ts">
-	import {Game} from "./game/Game";
+	import {gameFactory} from "./store/Game";
 	import Board from "./components/Board.svelte";
 
-	const game = new Game()
+	const game = gameFactory()
 </script>
 
 <main>
