@@ -31,17 +31,17 @@ export function pawnFactory(props: Omit<PieceInitializationProps, 'pieceType'>):
         calculateSquaresPieceCanMoveTo(): Coordinate[] {
             const { hasMoved, position } = get(this.store)
             return hasMoved ? [
-                {rank: position.rank + this.color === Color.white ? 1 : -1, file: this.position.file},
+                {rank: position.rank + (this.color === Color.white ? 1 : -1), file: this.position.file},
             ] : [
-                {rank: position.rank + this.color === Color.white ? 1 : -1, file: position.file},
-                {rank: position.rank + this.color === Color.white ? 2 : -2, file: position.file},
+                {rank: position.rank + (this.color === Color.white ? 1 : -1), file: position.file},
+                {rank: position.rank + (this.color === Color.white ? 2 : -2), file: position.file},
             ]
         },
         calculateSquaresPieceIsAttacking(): Coordinate[] {
             const { position } = get(this.store)
             return [
-                {rank: position.rank + this.color === Color.white ? 1 : -1, file: position.file + 1},
-                {rank: position.rank + this.color === Color.white ? 1 : -1, file: position.file - 1},
+                {rank: position.rank + (this.color === Color.white ? 1 : -1), file: position.file + 1},
+                {rank: position.rank + (this.color === Color.white ? 1 : -1), file: position.file - 1},
             ]
         },
     }

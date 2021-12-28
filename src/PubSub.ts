@@ -1,12 +1,13 @@
 import { v4 as uuid } from 'uuid'
 import type {Piece} from "./store/pieces";
-import type {Coordinate} from "./store/Square";
+import type {Coordinate, Square} from "./store/Square";
 
 export enum GameEvent {
     SetPiecePosition = 'SetPiecePosition',
     PieceSelected = 'PieceSelected',
     PieceIsAttackingSquares = 'PieceIsAttackingSquares',
-    PieceCanMoveToSquares = 'PieceCanMoveToSquares'
+    PieceCanMoveToCoordinates = 'PieceCanMoveToCoordinates',
+    SquareSelected = 'SquareSelected',
 }
 
 export interface GameEventPayloads {
@@ -21,9 +22,12 @@ export interface GameEventPayloads {
         piece: Piece,
         squares: Coordinate[]
     }
-    [GameEvent.PieceCanMoveToSquares]: {
+    [GameEvent.PieceCanMoveToCoordinates]: {
         piece: Piece,
         squares: Coordinate[],
+    }
+    [GameEvent.SquareSelected]: {
+        square: Square,
     }
 }
 
@@ -59,6 +63,8 @@ export class PubSub {
     }
 
     publish<T extends GameEvent>(event: T, payload: GameEventPayloads[T]): void {
+        console.log(`Event: ${event}`) //eslint-disable-line
+        console.log(`Payload:`, payload) //eslint-disable-line
         this.handlers.forEach(topic => {
             if (topic.event === event) {
                 topic.callback(payload)

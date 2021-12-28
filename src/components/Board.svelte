@@ -2,7 +2,6 @@
     import Square from "./Square.svelte";
     import Piece from "./Piece.svelte";
     import type {Board} from "../store/Board";
-
     export let board: Board
 </script>
 <div class="board">

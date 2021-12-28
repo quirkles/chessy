@@ -1,4 +1,4 @@
-import {equals, includes} from "ramda"
+import {equals, includes, prop, map} from "ramda"
 import {GameEvent, GameEventPayloads, PubSub} from "../PubSub";
 import type {Piece} from "./pieces";
 import {Writable, writable} from "svelte/store";
@@ -7,6 +7,10 @@ import {v4} from "uuid";
 enum SquareColor {
     light= 'light',
     dark= 'dark'
+}
+
+export enum SquareEvent {
+    SQUARE_CLICKED = 'SQUARE_CLICKED'
 }
 
 export interface Coordinate {
@@ -29,7 +33,8 @@ export interface Square {
     id: string
     store: Writable<SquareStore>
     squareColor: SquareColor
-    coordinate: Coordinate
+    coordinate: Coordinate;
+    emit(event: SquareEvent): void
 }
 
 export function squareFactory (params: SquareInitializationParams): Square {
@@ -53,10 +58,26 @@ export function squareFactory (params: SquareInitializationParams): Square {
         })
     })
 
+    pubSub.subscribe(GameEvent.PieceCanMoveToCoordinates, (payload) => {
+        store.update((store) => {
+            if(includes(coordinate, payload.squares)) {
+                store.isMovementTarget = true
+            }
+            return store
+        })
+    })
+
     pubSub.subscribe(GameEvent.PieceSelected, (payload: GameEventPayloads[GameEvent.PieceSelected]) => {
         store.update((store) => {
-
             store.holdsActivePiece = equals(store.pieceSquareIsOccupiedBy?.id, payload.piece.id);
+            store.isMovementTarget = includes(coordinate, payload.piece.calculateSquaresPieceCanMoveTo())
+            return store
+        })
+    })
+    pubSub.subscribe(GameEvent.SquareSelected, (payload: GameEventPayloads[GameEvent.SquareSelected]) => {
+        store.update((store) => {
+            store.holdsActivePiece = false
+            store.isMovementTarget = false
             return store
         })
     })
@@ -64,6 +85,12 @@ export function squareFactory (params: SquareInitializationParams): Square {
         id,
         store,
         squareColor,
-        coordinate
+        coordinate,
+        emit(event) {
+            switch (event) {
+                case SquareEvent.SQUARE_CLICKED:
+                    return pubSub.publish(GameEvent.SquareSelected, { square: this})
+            }
+        }
     }
 }

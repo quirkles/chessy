@@ -87,10 +87,6 @@ export function pieceFactory(props: PieceInitializationProps): BasePiece {
                 piece: this,
                 squares: this.squaresPieceIsAttacking
             })
-            pubSub.publish(GameEvent.PieceCanMoveToSquares, {
-                piece: this,
-                squares: this.squaresPieceCanMoveTo
-            })
         }
     }
 

@@ -29,6 +29,7 @@ export const boardFactory = (boardInitializationParams: BoardInitializationParam
     let rank = 0
     let file = 0
 
+
     while (rank < ranks) {
         if (!squares[ranks - (rank + 1)]) {
             squares[ranks - (rank + 1)] = []
@@ -47,8 +48,6 @@ export const boardFactory = (boardInitializationParams: BoardInitializationParam
         file = 0
     }
     
-    console.log(squares) //eslint-disable-line
-
     const pieces = initPieces(pubSub)
     return {
         boardStore: store,
